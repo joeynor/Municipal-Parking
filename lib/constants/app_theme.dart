@@ -32,7 +32,25 @@ final ThemeData themeData = new ThemeData(
     primaryColor: AppColors.orange[500],
     primaryColorBrightness: Brightness.light,
     accentColor: AppColors.orange[500],
-    accentColorBrightness: Brightness.light
+    accentColorBrightness: Brightness.light,
+    iconTheme: IconThemeData(color:Colors.white54),
+    accentIconTheme: IconThemeData(color:Colors.white70),
+    backgroundColor: AppColors.orange[500],
+    colorScheme: ColorScheme(
+      primary: AppColors.orange[500], 
+      primaryVariant: AppColors.orange[500], 
+      secondary: AppColors.orange[500], 
+      secondaryVariant: AppColors.orange[500], 
+      surface: AppColors.orange[500], 
+      background: AppColors.orange[500], 
+      error: AppColors.orange[500], 
+      onPrimary: Colors.white70, 
+      onSecondary: AppColors.orange[500], 
+      onSurface: AppColors.orange[500], 
+      onBackground: AppColors.orange[500], 
+      onError: AppColors.orange[500],
+      brightness: Brightness.light
+      )
 );
 
 final ThemeData themeDataDark = ThemeData(
