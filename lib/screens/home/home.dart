@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:municipal_parking/screens/home/qrcode.dart';
 import 'package:municipal_parking/widgets/Common.dart';
 
 
@@ -68,9 +69,12 @@ class HomeScreenState extends State<HomeScreen>{
   }
 
   Widget currentBody(){
-    return Center(
-      child: Text("$_currentIndex"),
-    );
+    switch(_currentIndex){
+      case 0:
+        return QRcodeWindow();
+      default:
+        return Center(child: Text("$_currentIndex"),);
+    }
   }
 
 }
