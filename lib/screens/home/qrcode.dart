@@ -58,7 +58,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder:(BuildContext context, BoxConstraints constraints){
-        this.cutOutSize=max(constraints.maxWidth*.60,200);
+        this.cutOutSize=max(constraints.maxWidth*.65,230);
         return  Column(
           children: <Widget>[
             Expanded(
