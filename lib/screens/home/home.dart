@@ -59,6 +59,7 @@ class HomeScreenState extends State<HomeScreen>{
       //       Navigator.pushNamed(context, '/login');
       //   }
       // ),
+      resizeToAvoidBottomInset: false,
 
     );
   }

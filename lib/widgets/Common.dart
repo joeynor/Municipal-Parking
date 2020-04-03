@@ -10,7 +10,7 @@ class Common{
 }
 final Widget commonAppBar=AppBar(
   title: Center(
-    child:Text("Common Bar",
+    child:Text("Auriya",
       style: TextStyle(color:themeData.colorScheme.onPrimary,),
       )
   ),
