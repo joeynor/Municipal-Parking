@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:municipal_parking/constants/font_family.dart';
 import 'qr_code_scanner.dart';
@@ -38,7 +40,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
   List<Widget> qrStackWidget;
 
   final double borderWidth=3;
-  final double cutOutSize=250;
+  double cutOutSize=250;
   
   String scanButtonText="Scan";
   @override 
@@ -54,27 +56,32 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
   
   @override
   Widget build(BuildContext context) {
-    
-    return  Column(
-        children: <Widget>[
-          Expanded(
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: Colors.white,
-                borderRadius: 1,
-                borderLength: 40,
-                borderWidth: this.borderWidth,
-                cutOutSize: this.cutOutSize,
+    return LayoutBuilder(
+      builder:(BuildContext context, BoxConstraints constraints){
+        this.cutOutSize=max(constraints.maxWidth*.60,200);
+        return  Column(
+          children: <Widget>[
+            Expanded(
+              child: QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+                overlay: QrScannerOverlayShape(
+                  borderColor: Colors.white,
+                  borderRadius: 1,
+                  borderLength: 40,
+                  borderWidth: this.borderWidth,
+                  cutOutSize: this.cutOutSize,
+                ),
+                // stackWidget: <Widget>[],
+                stackWidget:_getStackWidget()
               ),
-              // stackWidget: <Widget>[],
-              stackWidget:_getStackWidget()
+              flex: 1,
             ),
-            flex: 1,
-          ),
-        ],
-      );
+          ],
+        );
+      }
+    );
+    
   }
   List<Widget> _getStackWidget(){
       return [
