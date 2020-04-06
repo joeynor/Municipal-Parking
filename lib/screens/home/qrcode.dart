@@ -65,6 +65,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
         category: "Normal",
         perHourRate: 2,
         amountDue: 11.40,
+        paymentId: "p14545845"
       )
     );
   }

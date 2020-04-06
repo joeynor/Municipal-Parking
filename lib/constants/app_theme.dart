@@ -50,6 +50,9 @@ final ThemeData themeData = new ThemeData(
       onBackground: AppColors.orange[500], 
       onError: AppColors.orange[500],
       brightness: Brightness.light
+      ),
+      primaryIconTheme: IconThemeData(
+        color:Colors.white70
       )
 );
 

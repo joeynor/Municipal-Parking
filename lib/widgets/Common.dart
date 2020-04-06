@@ -9,19 +9,19 @@ class Common{
   }
 }
 final Widget commonAppBar=AppBar(
-  title: Center(
-    child:Text("Auriya",
-      style: TextStyle(color:themeData.colorScheme.onPrimary,),
-      )
+  title: Text("Auriya",
+    style: TextStyle(color:themeData.colorScheme.onPrimary,),
   ),
   brightness: Brightness.dark,
+  centerTitle: true,
 );
 
 class FeeDetails{
+  String paymentId;
   int hours;
   int minutes;
   String category;
   double perHourRate;
   double amountDue;
-  FeeDetails({this.hours,this.minutes,this.category,this.perHourRate,this.amountDue});
+  FeeDetails({this.hours,this.minutes,this.category,this.perHourRate,this.amountDue,this.paymentId});
 }

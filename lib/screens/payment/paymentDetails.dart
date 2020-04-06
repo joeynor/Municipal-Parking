@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:municipal_parking/widgets/Common.dart';
 import 'package:nice_button/NiceButton.dart';
+import 'package:municipal_parking/routes.dart';
+
 import 'dart:math';
 class PaymentDetails extends StatelessWidget{
   FeeDetails _args;
@@ -62,7 +64,7 @@ class PaymentDetails extends StatelessWidget{
             Text("${_args.hours}h:${_args.minutes}m",
               style: TextStyle(
                 color:colorScheme.primary,
-                fontSize: width*0.11,
+                fontSize: width*0.08,
                 height: 1.2
                 // letterSpacing: 1.0
                 ),
@@ -84,11 +86,35 @@ class PaymentDetails extends StatelessWidget{
                 color: Colors.lightBlueAccent,
                 letterSpacing: width*0.005,
                 fontSize: width*0.065,
-                // height: width*0.005
+                height: width*0.005
               ),
             ),
-            Text("Category: ${_args.category}"),
-            Text("Hourly Rate: ${_args.perHourRate}"),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: <InlineSpan>[
+                  TextSpan(text:"Category: ",style: TextStyle(color:Colors.brown)),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle ,
+                    child:Text(_args.category,style: TextStyle(color:colorScheme.primary,fontSize: width*0.06))
+                  )
+                ]
+              )
+
+            ),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: <InlineSpan>[
+                  TextSpan(text:"Hourly Rate: ",style: TextStyle(color:Colors.brown)),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle ,
+                    child:Text(_args.perHourRate.toStringAsFixed(2),style: TextStyle(color:colorScheme.primary,fontSize: width*0.06))
+                  )
+                ]
+              )
+
+            ),
           ],
         ),
         flex:1,
@@ -109,13 +135,19 @@ class PaymentDetails extends StatelessWidget{
                 // height: width*0.005
               ),    
             ),
-            Text("RM: ${_args.amountDue.toStringAsFixed(2)}",
-              style: TextStyle(
-                color:colorScheme.primary,
-                fontSize: width*0.11,
-                height: 1.2
-                // letterSpacing: 1.0
-               ),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(color:colorScheme.primary),
+                children: <InlineSpan>[
+                  TextSpan(text:"RM "),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle ,
+                    child:Text(_args.amountDue.toStringAsFixed(2),style: TextStyle(fontSize: width*0.08,color: colorScheme.primary))
+                  )
+                ]
+              )
+
             ),
           ],
         ),
@@ -140,7 +172,11 @@ class PaymentDetails extends StatelessWidget{
   }
 
   void _payButtonPressed(){
-
+      Navigator.pushNamed(
+        context, 
+        Routes.paymentScreen,
+        arguments: this._args
+    );
   }
 
 }
