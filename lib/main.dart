@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget{
 
     return MaterialApp(
       title: Strings.appTitle,
-      initialRoute: Routes.home,
+      initialRoute: Routes.login,
       routes: Routes.routes,
       theme: themeData, 
       debugShowCheckedModeBanner: false
