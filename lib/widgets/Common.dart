@@ -16,3 +16,12 @@ final Widget commonAppBar=AppBar(
   ),
   brightness: Brightness.dark,
 );
+
+class FeeDetails{
+  int hours;
+  int minutes;
+  String category;
+  double perHourRate;
+  double amountDue;
+  FeeDetails({this.hours,this.minutes,this.category,this.perHourRate,this.amountDue});
+}

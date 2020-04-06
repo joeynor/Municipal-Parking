@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:municipal_parking/constants/font_family.dart';
+import 'package:municipal_parking/widgets/Common.dart';
 import 'qr_code_scanner.dart';
 import 'qr_scanner_overlay_shape.dart';
 import 'package:nice_button/NiceButton.dart';
+import 'package:municipal_parking/routes.dart';
+
 
 const flash_on = "FLASH ON";
 const flash_off = "FLASH OFF";
@@ -52,6 +56,17 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
       scanButtonText=(scanButtonText=="Scan")?"Scanning":"Scan";
     });
     print("Scann button------------->$scanButtonText");
+    Navigator.pushNamed(
+      context, 
+      Routes.paymentDetails,
+      arguments: FeeDetails(
+        hours: 5,
+        minutes: 50,
+        category: "Normal",
+        perHourRate: 2,
+        amountDue: 11.40,
+      )
+    );
   }
   
   @override
