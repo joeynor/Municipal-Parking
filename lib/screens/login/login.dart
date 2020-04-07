@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:municipal_parking/routes.dart';
 import 'package:municipal_parking/widgets/Common.dart';
 import 'dart:math';
 import 'package:nice_button/NiceButton.dart';
@@ -213,6 +214,6 @@ class LoginScreenState extends State<LoginScreen>{
   }
 
   void _signInButtonPressed(){
-
+    Navigator.popAndPushNamed(context, Routes.home);
   }
 }

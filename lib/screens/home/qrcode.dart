@@ -20,12 +20,13 @@ const back_camera = "BACK CAMERA";
 
 
 typedef void ScanButtonPressed();
-
+typedef void BottomNavbarCallBack(bool flag);
 class QRcodeWindow extends StatefulWidget {
   const QRcodeWindow({
     Key key,
+    this.navBarVisibility
   }) : super(key: key);
-
+  final BottomNavbarCallBack navBarVisibility;
   @override
   State<StatefulWidget> createState() => _QRcodeWindowState();
 }
@@ -46,28 +47,43 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
   final double borderWidth=3;
   double cutOutSize=250;
   
-  String scanButtonText="Scan";
+  String scanButtonText;
   @override 
   void initState(){
     super.initState();
+    scanButtonText="Scan";
   }
-  void _scanButtonPressed(){
+  void _scanButtonPressed()async{
     setState(() {
       scanButtonText=(scanButtonText=="Scan")?"Scanning":"Scan";
     });
-    print("Scann button------------->$scanButtonText");
-    Navigator.pushNamed(
-      context, 
-      Routes.paymentDetails,
-      arguments: FeeDetails(
-        hours: 5,
-        minutes: 50,
-        category: "Normal",
-        perHourRate: 2,
-        amountDue: 11.40,
-        paymentId: "p14545845"
-      )
-    );
+    widget.navBarVisibility(false);
+    await new Future.delayed(const Duration(seconds : 2));
+
+    if(this.mounted){
+      // widget.navBarVisibility(true);
+      // scanButtonText=(scanButtonText=="Scan")?"Scanning":"Scan";
+      // print("Scann button------------->$scanButtonText");
+      Navigator.pushNamed(
+        context, 
+        Routes.paymentDetails,
+        arguments: FeeDetails(
+          hours: 5,
+          minutes: 50,
+          category: "Normal",
+          perHourRate: 2,
+          amountDue: 11.40,
+          paymentId: "p14545845"
+        )
+      ).then((value){
+        widget.navBarVisibility(true);
+        setState(() {
+            scanButtonText="Scan";
+          }
+        );
+      });
+    }
+
   }
   
   @override
@@ -127,6 +143,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
 
   @override
   void dispose() {
+    widget.navBarVisibility(true);
     controller.dispose();
     super.dispose();
   }

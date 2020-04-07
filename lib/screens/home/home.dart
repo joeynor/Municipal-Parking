@@ -11,10 +11,11 @@ class HomeScreen extends StatefulWidget{
 class HomeScreenState extends State<HomeScreen>{
   int _currentIndex;
   List<BottomNavigationBarItem> _bottomNavigationBarItems;
-
+  bool _showBottomNavBar;
   @override
   void initState() {
     super.initState();
+    _showBottomNavBar=true;
     _currentIndex=0; 
     _bottomNavigationBarItems=[
       BottomNavigationBarItem(icon: Icon(Icons.home),title: Text("Home")),
@@ -33,25 +34,32 @@ class HomeScreenState extends State<HomeScreen>{
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: currentAppBar(),
       body: currentBody(),
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels:false,
-        items: _bottomNavigationBarItems,
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: textTheme.caption.fontSize,
-        unselectedFontSize: textTheme.caption.fontSize,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: colorScheme.onPrimary,
-        unselectedItemColor: colorScheme.onPrimary.withOpacity(0.38),
-        backgroundColor: colorScheme.primary,
-        selectedIconTheme: Theme.of(context).accentIconTheme,
-        unselectedIconTheme: Theme.of(context).iconTheme,
+      bottomNavigationBar: Visibility(
+        visible: _showBottomNavBar,
+        maintainSize: true,
+        maintainState: true,
+        maintainAnimation: true,
+        child: BottomNavigationBar(
+          showUnselectedLabels:false,
+          items: _bottomNavigationBarItems,
+          currentIndex: _currentIndex,
+          type: BottomNavigationBarType.fixed,
+          selectedFontSize: textTheme.caption.fontSize,
+          unselectedFontSize: textTheme.caption.fontSize,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          selectedItemColor: colorScheme.onPrimary,
+          unselectedItemColor: colorScheme.onPrimary.withOpacity(0.38),
+          backgroundColor: colorScheme.primary,
+          selectedIconTheme: Theme.of(context).accentIconTheme,
+          unselectedIconTheme: Theme.of(context).iconTheme,
+        ),
       ),
       // floatingActionButton: FloatingActionButton(
       //   child:Icon(Icons.add), 
@@ -72,10 +80,21 @@ class HomeScreenState extends State<HomeScreen>{
   Widget currentBody(){
     switch(_currentIndex){
       case 0:
-        return QRcodeWindow();
+        return QRcodeWindow(navBarVisibility: _navBarCallBack,);
       default:
         return Center(child: Text("$_currentIndex"),);
     }
   }
+  void _navBarCallBack(bool flag){
+    setState(() {
+      this._showBottomNavBar=flag;
+    });
+  }
+
+  void dispose(){
+    this._showBottomNavBar=true;
+    super.dispose();
+  }
+
 
 }
