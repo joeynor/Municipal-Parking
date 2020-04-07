@@ -4,16 +4,32 @@ import 'package:municipal_parking/widgets/Common.dart';
 import 'dart:math';
 import 'package:nice_button/NiceButton.dart';
 
-class LoginScreen extends StatelessWidget{
+
+class LoginScreen extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState()=>LoginScreenState();
+
+}
+class LoginScreenState extends State<LoginScreen>{
   ColorScheme colorScheme;
   BuildContext context;
   double width;
+  double height;
+  bool passwordVisible;
+  
+  void initState(){
+    super.initState();
+    passwordVisible=false;
+  }
+
   @override
   Widget build(BuildContext context) {
     this.context=context;
     colorScheme=Theme.of(context).colorScheme;
     return Scaffold(
       body: _getBody(),
+      // resizeToAvoidBottomInset: false,
+
     );
   }
 
@@ -21,7 +37,9 @@ class LoginScreen extends StatelessWidget{
     return LayoutBuilder(
       builder: (context,constraints){
         this.width=constraints.maxWidth;
+        this.height=constraints.maxHeight;
         return Container(
+          padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin:Alignment.centerLeft,
@@ -44,9 +62,9 @@ class LoginScreen extends StatelessWidget{
   Widget _getLogo(){
     return Expanded(
       child:FittedBox(
-        fit:BoxFit.fitWidth,
-        child:Icon(Icons.child_care,semanticLabel: "Name",size: this.width*.50)
-        ),
+        fit:BoxFit.fitHeight,
+        child:Icon(Icons.child_care,semanticLabel: "Name")
+      ),
       flex:2
     );
   }
@@ -74,45 +92,81 @@ class LoginScreen extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
-                  Text("Hello",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-                  Text("Please login to your account",style: TextStyle(fontWeight: FontWeight.w100),)
+                  FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child:Text("Hello",style: TextStyle(fontSize: this.height*0.04,fontWeight: FontWeight.bold),),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.fitHeight,
+                    child:Text("Please login to your account",style: TextStyle(fontWeight: FontWeight.w200),)
+                  ),
+                  
+                  
                 ]
               ),
               flex:2
             ),
             Expanded(
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(top:0,bottom: 10),
                     suffixIcon: Icon(Icons.email,color: colorScheme.primary,),
                     suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(25)),
                     labelText: "Email Address",
-                labelStyle: TextStyle(color:Colors.black26,fontWeight: FontWeight.w100)
-                  )
+                    labelStyle: TextStyle(color:Colors.black38,fontWeight: FontWeight.w100)
+                  ),
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(decoration: TextDecoration.none),
+                  
               ),
               flex:2,
             ),
             Expanded(
               child: TextFormField(
+                 keyboardType: TextInputType.visiblePassword,
                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.offline_bolt,color: colorScheme.primary,),
-                    suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(25)),
+                    contentPadding: EdgeInsets.only(top:0,bottom: 10),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        // Based on passwordVisible state choose the icon
+                        passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                        color: colorScheme.primary,
+                        ),
+                      onPressed: () {
+                        // Update the state i.e. toogle the state of passwordVisible variable
+                        setState(() {
+                            passwordVisible = !passwordVisible;
+                        });
+                      },
+                    ),
+                    suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(34)),
                     labelText: "Password",
-                    labelStyle: TextStyle(color:Colors.black26,fontWeight: FontWeight.w100),
+                    labelStyle: TextStyle(color:Colors.black38,fontWeight: FontWeight.w100),
+                    // isCo
                   
                   ),
-                  obscureText: true,
+                  obscureText: passwordVisible,
+                  
               ),
               flex:2,
             ),
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
-                child:Text("Forgot Password ?",style: TextStyle(color:colorScheme.primary),),
+                child:FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child:Text("Forgot Password ?",style: TextStyle(color:colorScheme.primary),),
+                )
               ),
               flex: 1,
             ),
             Expanded(
-              child:NiceButton(
+              child:FittedBox(
+                fit: BoxFit.contain,
+                child:NiceButton(
                 width: min(this.width*0.50,200),
                 padding: EdgeInsets.all(9.0),
                 elevation: 2.0,
@@ -122,6 +176,7 @@ class LoginScreen extends StatelessWidget{
                 background: Theme.of(context).colorScheme.primary,
                 onPressed: _signInButtonPressed
 
+              )
               ),
               flex: 2,
             )
