@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     // FlutterStatusbarcolor.setStatusBarColor(themeData.primaryColor);
     // FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
 
     return MaterialApp(

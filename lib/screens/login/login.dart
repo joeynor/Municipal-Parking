@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:municipal_parking/widgets/Common.dart';
 import 'dart:math';
+import 'package:nice_button/NiceButton.dart';
 
 class LoginScreen extends StatelessWidget{
   ColorScheme colorScheme;
@@ -53,15 +54,79 @@ class LoginScreen extends StatelessWidget{
     return Expanded(
       child: Container(
         width: min(width*0.80,500),
+        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
           gradient:LinearGradient(
-            colors:[Colors.white70,Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight
+            colors:[Colors.white,Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
           ),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           backgroundBlendMode: BlendMode.hardLight,
-          boxShadow: kElevationToShadow[16]
+          boxShadow: kElevationToShadow[2]
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center ,
+          children: [
+            Expanded(
+              child:Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  Text("Hello",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
+                  Text("Please login to your account",style: TextStyle(fontWeight: FontWeight.w100),)
+                ]
+              ),
+              flex:2
+            ),
+            Expanded(
+              child: TextFormField(
+                 decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.email,color: colorScheme.primary,),
+                    suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(25)),
+                    labelText: "Email Address",
+                labelStyle: TextStyle(color:Colors.black26,fontWeight: FontWeight.w100)
+                  )
+              ),
+              flex:2,
+            ),
+            Expanded(
+              child: TextFormField(
+                 decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.offline_bolt,color: colorScheme.primary,),
+                    suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(25)),
+                    labelText: "Password",
+                    labelStyle: TextStyle(color:Colors.black26,fontWeight: FontWeight.w100),
+                  
+                  ),
+                  obscureText: true,
+              ),
+              flex:2,
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child:Text("Forgot Password ?",style: TextStyle(color:colorScheme.primary),),
+              ),
+              flex: 1,
+            ),
+            Expanded(
+              child:NiceButton(
+                width: min(this.width*0.50,200),
+                padding: EdgeInsets.all(9.0),
+                elevation: 2.0,
+                radius: 50.0,
+                text: "Login",
+                textColor: Theme.of(context).colorScheme.onPrimary,
+                background: Theme.of(context).colorScheme.primary,
+                onPressed: _signInButtonPressed
+
+              ),
+              flex: 2,
+            )
+
+          ]
         ),
 
       ),
@@ -90,5 +155,9 @@ class LoginScreen extends StatelessWidget{
       ),
       flex: 1,
     );
+  }
+
+  void _signInButtonPressed(){
+
   }
 }
