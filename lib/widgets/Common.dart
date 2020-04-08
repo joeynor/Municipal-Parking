@@ -9,7 +9,7 @@ class Common{
   }
 }
 final Widget commonAppBar=AppBar(
-  title: Text("Auriya",
+  title: Text("Logo",
     style: TextStyle(color:themeData.colorScheme.onPrimary,),
   ),
   brightness: Brightness.dark,
@@ -23,5 +23,6 @@ class FeeDetails{
   String category;
   double perHourRate;
   double amountDue;
-  FeeDetails({this.hours,this.minutes,this.category,this.perHourRate,this.amountDue,this.paymentId});
+  String parkingNo;
+  FeeDetails({this.parkingNo,this.hours,this.minutes,this.category,this.perHourRate,this.amountDue,this.paymentId});
 }

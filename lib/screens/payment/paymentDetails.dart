@@ -35,6 +35,24 @@ class PaymentDetails extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child:RichText(
+                  text:TextSpan(
+                    text:"Parking No: ",
+                    style: TextStyle(fontSize: width*.06,color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text:_args.parkingNo,
+                        style:TextStyle(color:colorScheme.primary)
+                      )
+                    ]
+                  )
+                )
+              ),
+              flex:1
+            ),
             _getDurationWidget(),
             Divider(indent: width*.23,thickness: width*.005,endIndent: width*.23,),
             _getDescriptionWidget(),
@@ -71,7 +89,7 @@ class PaymentDetails extends StatelessWidget{
             ),
           ],
         ),
-        flex:1,
+        flex:2,
     );
   }
   Widget _getDescriptionWidget(){
@@ -117,7 +135,7 @@ class PaymentDetails extends StatelessWidget{
             ),
           ],
         ),
-        flex:1,
+        flex:2,
     );
 
   }
@@ -151,7 +169,7 @@ class PaymentDetails extends StatelessWidget{
             ),
           ],
         ),
-        flex:1,
+        flex:2,
     );
   }
   Widget _getPayButton(){
@@ -167,7 +185,7 @@ class PaymentDetails extends StatelessWidget{
           onPressed: _payButtonPressed
         ),
       ),
-      flex: 1,
+      flex: 2,
     );
   }
 

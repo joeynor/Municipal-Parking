@@ -202,7 +202,7 @@ class LoginScreenState extends State<LoginScreen>{
                 style: TextStyle(decoration: TextDecoration.underline),
                 recognizer: new TapGestureRecognizer()
                   ..onTap=(){
-                    
+                    Navigator.pushNamed(context, Routes.signUpScreen);
                   }
               )  
             ] 

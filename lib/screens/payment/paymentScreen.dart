@@ -15,7 +15,7 @@ class PaymentScreenState extends State<PaymentScreen>{
 
     return Scaffold(
       appBar: commonAppBar,
-      body: Center(child: Text("dd"),),
+      body: Center(child: Text("Pay here"),),
       resizeToAvoidBottomInset: false,
     );
   }

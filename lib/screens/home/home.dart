@@ -34,7 +34,7 @@ class HomeScreenState extends State<HomeScreen>{
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: Colors.black12,
+      backgroundColor: _currentIndex==0?Colors.black12:Colors.white,
       appBar: currentAppBar(),
       body: currentBody(),
       bottomNavigationBar: Visibility(
