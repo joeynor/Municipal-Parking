@@ -37,7 +37,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
 
 
   AnimationController _animation;
-  bool _scanning;
+  // bool _scanning;
   double width;
   double height;
 
@@ -56,7 +56,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
     mutex=true;
 
     //Line Transition animation
-    _scanning=false;
+    // _scanning=false;
     _animation = AnimationController(
       duration: const Duration(seconds: 2),
       reverseDuration: const Duration(seconds: 2),
@@ -107,6 +107,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
               setState(() {
                 scanButtonText = "Scan";
               });
+              _animation.stop();
               // mutex=true;
         });
       else{
@@ -169,8 +170,8 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
       ),
       LineTransition(
         animation:this._animation,
-        width:this.cutOutSize-this.borderWidth*2,
-        left:(this.width-cutOutSize)/2+this.borderWidth,
+        width:this.cutOutSize-this.borderWidth*4,
+        left:(this.width-cutOutSize)/2+this.borderWidth*2,
         height:this.cutOutSize-this.borderWidth*2,
         top:(this.height-cutOutSize)/2+this.borderWidth
       )

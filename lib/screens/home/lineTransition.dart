@@ -18,8 +18,9 @@ class LineTransition extends AnimatedWidget {
         height: 3,
         width: this.width,
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
           gradient: RadialGradient(
-            radius: width*.2,
+            radius: width*.3,
             colors: [
               Colors.white38,
               Colors.transparent,
