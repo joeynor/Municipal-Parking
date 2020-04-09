@@ -8,6 +8,7 @@ import 'qr_code_scanner.dart';
 import 'qr_scanner_overlay_shape.dart';
 import 'package:nice_button/NiceButton.dart';
 import 'package:municipal_parking/routes.dart';
+import 'lineTransition.dart';
 
 const flash_on = "FLASH ON";
 const flash_off = "FLASH OFF";
@@ -26,13 +27,21 @@ class QRcodeWindow extends StatefulWidget {
   State<StatefulWidget> createState() => _QRcodeWindowState();
 }
 
-class _QRcodeWindowState extends State<QRcodeWindow> {
+class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderStateMixin {
   var qrText = "";
   var flashState = flash_off;
   var cameraState = front_camera;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool mutex;
+
+
+  AnimationController _animation;
+  bool _scanning;
+  double width;
+  double height;
+
+
 
   List<Widget> qrStackWidget;
 
@@ -45,6 +54,14 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
     super.initState();
     scanButtonText = "Scan";
     mutex=true;
+
+    //Line Transition animation
+    _scanning=false;
+    _animation = AnimationController(
+      duration: const Duration(seconds: 2),
+      reverseDuration: const Duration(seconds: 2),
+      vsync: this,
+    );
   }
 
   void _scanButtonPressed(){
@@ -52,6 +69,17 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
       scanButtonText = scanButtonText=="Scan"?"Scanning":"Scan";
     });
     widget.navBarVisibility(scanButtonText=="Scan");
+
+
+    if(scanButtonText=="Scanning"){
+      _animation.repeat(reverse: true);
+    }
+    else{
+      _animation.stop();
+      _animation.reset();
+    }
+
+
     mutex=!mutex;
   }
   void _onQRcodeFound(String parkingNumber){
@@ -96,6 +124,8 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       this.cutOutSize = max(constraints.maxWidth * .65, 230);
+      this.width=constraints.maxWidth;
+      this.height=constraints.maxHeight;
       return Column(
         children: <Widget>[
           Expanded(
@@ -136,6 +166,13 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
         scanButtonPressed: _scanButtonPressed,
         cutOutSize: this.cutOutSize,
         borderWidth: this.borderWidth,
+      ),
+      LineTransition(
+        animation:this._animation,
+        width:this.cutOutSize-this.borderWidth*2,
+        left:(this.width-cutOutSize)/2+this.borderWidth,
+        height:this.cutOutSize-this.borderWidth*2,
+        top:(this.height-cutOutSize)/2+this.borderWidth
       )
     ];
   }
@@ -208,6 +245,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> {
   void dispose() {
     widget.navBarVisibility(true);
     controller.dispose();
+    _animation.dispose();
     super.dispose();
   }
 }
