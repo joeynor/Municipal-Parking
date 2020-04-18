@@ -57,7 +57,7 @@ class LoginScreenState extends State<LoginScreen>{
   }
 
   Widget _getBody(){
-
+    _keyBoardOn=MediaQuery.of(context).viewInsets.bottom == 0.0;
     return LayoutBuilder(
       builder: (context,constraints){
         this.width=constraints.maxWidth;
@@ -65,6 +65,7 @@ class LoginScreenState extends State<LoginScreen>{
 
         return Container(
           padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top),
+          width: this.width,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin:Alignment.centerLeft,
@@ -76,7 +77,10 @@ class LoginScreenState extends State<LoginScreen>{
             children:[
               _getLogo(),
               _getLoginBox(),
-              _getBottomNote(),
+              Visibility(
+                child:_getBottomNote(),
+                visible: _keyBoardOn,
+              )
             ]
           )
         );
@@ -223,7 +227,7 @@ class LoginScreenState extends State<LoginScreen>{
         )
 
       ),
-      flex: 4,
+      flex: _keyBoardOn?5:4,
     );
   }
   Widget _getBottomNote(){
