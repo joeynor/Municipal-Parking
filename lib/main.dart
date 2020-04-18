@@ -3,8 +3,10 @@ import 'package:municipal_parking/constants/app_theme.dart';
 import 'package:municipal_parking/routes.dart';
 import 'package:municipal_parking/constants/strings.dart';
 import 'package:flutter/services.dart';
-
-
+import 'package:municipal_parking/screens/splash/splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:municipal_parking/screens/home/home.dart';
+import 'package:municipal_parking/screens/login/login.dart';
 
 void main(){
   SystemChrome.setSystemUIOverlayStyle(
@@ -28,9 +30,9 @@ class MyApp extends StatelessWidget{
 
     return MaterialApp(
       title: Strings.appTitle,
-      initialRoute: Routes.login,
       routes: Routes.routes,
       theme: themeData, 
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false
     );
   }
@@ -38,6 +40,41 @@ class MyApp extends StatelessWidget{
 
 
 
+class CheckAuth extends StatefulWidget {
+  @override
+  _CheckAuthState createState() => _CheckAuthState();
+}
+
+class _CheckAuthState extends State<CheckAuth> {
+  bool isAuth = false;
+  @override
+  void initState() {
+    _checkIfLoggedIn();
+    super.initState();
+  }
+
+  void _checkIfLoggedIn() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    if(token != null){
+      setState(() {
+        isAuth = true;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    Widget child;
+    if (isAuth) {
+      child = HomeScreen();
+    } else {
+      child = LoginScreen();
+    }
+    return Scaffold(
+      body: child,
+    );
+  }
+}
 
 
 

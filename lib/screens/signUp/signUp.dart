@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nice_button/NiceButton.dart';
 import 'dart:math';
+import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:municipal_parking/utils/api.dart';
+import 'dart:convert';
+import 'package:municipal_parking/routes.dart';
+
+import './passwordField.dart';
 
 class SignUpScreen extends StatefulWidget{
   @override
@@ -9,16 +16,24 @@ class SignUpScreen extends StatefulWidget{
 }
 class SignUpScreenState extends State<SignUpScreen> {
   BuildContext context;
+  BuildContext bodyContext;
   ColorScheme colorScheme;
   double width;
   double height;
   bool _keyBoardOn;
 
+  String _fullName;
+  String _password;
+  String _email;
+ 
+  bool _isLoading;
+
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _keyBoardOn=false;
+    _isLoading=false;
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -35,10 +50,11 @@ class SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _getBody() {
-    print("---------------->${MediaQuery.of(context).viewInsets.bottom}");
+    // print("---------------->${MediaQuery.of(context).viewInsets.bottom}");
     _keyBoardOn=MediaQuery.of(context).viewInsets.bottom != 0;
     return LayoutBuilder(
       builder: (context, constraints) {
+        this.bodyContext=context;
         this.width = constraints.maxWidth;
         this.height = constraints.maxHeight;
         return Container(
@@ -101,13 +117,19 @@ class SignUpScreenState extends State<SignUpScreen> {
               style: TextStyle(
                   decoration: TextDecoration.none,
                   color: colorScheme.onPrimary),
+              validator: (fullName){
+                if(fullName.isEmpty)
+                  return "Please enter fullname";
+                _fullName=fullName;
+                return null;
+              },
             ),
             flex: 1,
           ),
           Expanded(
             child: TextFormField(
               keyboardType: TextInputType.emailAddress,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.none,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.only(top: 0, bottom: 10),
                 suffixIcon: Icon(
@@ -123,15 +145,29 @@ class SignUpScreenState extends State<SignUpScreen> {
               style: TextStyle(
                   decoration: TextDecoration.none,
                   color: colorScheme.onPrimary),
+              validator: (email){
+                if(!EmailValidator.validate(email))
+                  return "Please enter valid email";
+                _email=email;
+                return null;
+              },
             ),
             flex: 1,
           ),
           Expanded(
-            child: PasswordField(label: "Password"),
+            child: PasswordField(label: "Password",validator: (String pass){
+              if(pass.isEmpty) return "Please enter valid password";
+              _password=pass;
+              return null;
+            },),
             flex: 1,
           ),
           Expanded(
-            child: PasswordField(label: "Confirm Password"),
+            child: PasswordField(label: "Confirm Password",validator: (String pass){
+              if(pass.isEmpty) return "Please enter valid password";
+              if(_password!=pass) return "Password doesn't match";
+              return null;
+            }),
             flex: 1,
           ),
         ]));
@@ -144,7 +180,7 @@ class SignUpScreenState extends State<SignUpScreen> {
             padding: EdgeInsets.all(5.0),
             elevation: 2.0,
             radius: 40.0,
-            text: "Finish",
+            text: _isLoading?"Processing":"Register",
             textColor: colorScheme.onPrimary,
             background: colorScheme.primary,
             onPressed: _finishButtonPressed),
@@ -168,53 +204,62 @@ class SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _finishButtonPressed() {}
-}
+  void _finishButtonPressed() async {
+    if (_formKey.currentState.validate()) {
+      // try {
+      //   final result = await InternetAddress.lookup('google.com');
+      //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          _register();
+        // }
+      // } on SocketException catch (_) {
+      //   final snackBar = SnackBar(content: Text("Error: Server isn't reachable"));
+      //   Scaffold.of(context).showSnackBar(snackBar);
+      // }
+        // print("reg form valided");
+    }
+    // else
+      // print("Reg fomr invalid");
+  }
+  
+  void _register()async{
+    setState(() {
+      _isLoading = true;
+    });
+    var data = {
+      'name':_fullName,
+      'email' : _email,
+      'password': _password,
+    };
 
-class PasswordField extends StatefulWidget {
-  @override
-  final String label;
-  PasswordField({this.label});
 
-  State<StatefulWidget> createState() => PasswordFieldState();
-}
-
-class PasswordFieldState extends State<PasswordField> {
-  bool _passwordVisible;
-  void initState() {
-    super.initState();
-    _passwordVisible = false;
+    try{
+      var res = await Network().authData(data, '/register');
+      var body = json.decode(res.body);
+      if(body['success']){
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('token', json.encode(body['token']));
+        localStorage.setString('user', json.encode(body['user']));
+        Navigator.pushNamedAndRemoveUntil(context,Routes.home,(r)=>false);
+      }
+      else{
+        if(body['message'].containsKey("email")){
+          final snackBar = SnackBar(content:Text("Email aready exists",textAlign:TextAlign.center,));
+          Scaffold.of(bodyContext).showSnackBar(snackBar);
+        }
+        else{
+          final snackBar = SnackBar(content:Text("Unkown error",textAlign:TextAlign.center,));
+          Scaffold.of(bodyContext).showSnackBar(snackBar);
+        }
+      } 
+    }
+    catch(e){
+        final snackBar = SnackBar(content:Text("Error: Server isn't reachable",textAlign:TextAlign.center,));
+        Scaffold.of(bodyContext).showSnackBar(snackBar);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return TextFormField(
-      obscureText: !_passwordVisible,
-      keyboardType: TextInputType.visiblePassword,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(top: 0, bottom: 10),
-        suffixIcon: IconButton(
-          icon: Icon(
-            // Based on passwordVisible state choose the icon
-            _passwordVisible ? Icons.visibility : Icons.visibility_off,
-            color: colorScheme.onPrimary,
-          ),
-          onPressed: () {
-            // Update the state i.e. toogle the state of passwordVisible variable
-            setState(() {
-              _passwordVisible = !_passwordVisible;
-            });
-          },
-        ),
-        suffixIconConstraints: BoxConstraints.loose(Size.fromWidth(34)),
-        labelText: widget.label,
-        labelStyle:
-            TextStyle(color: Colors.white54, fontWeight: FontWeight.w600),
-      ),
-      textAlignVertical: TextAlignVertical.center,
-      style: TextStyle(
-          decoration: TextDecoration.none, color: colorScheme.onPrimary),
-    );
-  }
 }
+
