@@ -64,7 +64,7 @@ class LoginScreenState extends State<LoginScreen>{
         this.height=constraints.maxHeight;
 
         return Container(
-          padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top),
+          padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top,bottom:5),
           width: this.width,
           decoration: BoxDecoration(
             gradient: LinearGradient(
