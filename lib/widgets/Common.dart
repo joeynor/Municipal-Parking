@@ -17,12 +17,11 @@ final Widget commonAppBar=AppBar(
 );
 
 class FeeDetails{
-  String paymentId;
+  String parkingNo;
   int hours;
   int minutes;
   String category;
   double perHourRate;
   double amountDue;
-  String parkingNo;
   FeeDetails({this.parkingNo,this.hours,this.minutes,this.category,this.perHourRate,this.amountDue,this.paymentId});
 }
