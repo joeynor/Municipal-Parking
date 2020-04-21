@@ -32,7 +32,12 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
   var flashState = flash_off;
   var cameraState = front_camera;
   QRViewController controller;
+
+  
+  final _formKey = GlobalKey<FormState>();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  
+  
   bool mutex;
 
 
@@ -92,15 +97,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
     if (this.mounted) {
       if(_validParkingNo(parkingNumber))
          Navigator.pushNamed(context, Routes.paymentDetails,
-                arguments: FeeDetails(
-                    hours: 5,
-                    minutes: 50,
-                    category: "Normal",
-                    perHourRate: 2,
-                    amountDue: 11.40,
-                    paymentId: "P14545845",
-                    parkingNo: parkingNumber
-                  )
+                arguments: Parking(parkingNo:parkingNumber)
                 )
             .then((value) {
               widget.navBarVisibility(true);
@@ -161,6 +158,7 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
         enterButtonPressed: _enterButtonPressed,
         cutOutSize: this.cutOutSize,
         borderWidth: this.borderWidth,
+        formKey:_formKey
       ),
       ScanButton(
         buttonText: scanButtonText,
@@ -204,24 +202,24 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
       // print("Scann button------------->$scanButtonText");
       if(_isFlashOn(flashState))
         controller.toggleFlash();
-      if(_validParkingNo(parkingNumber))
-      Navigator.pushNamed(context, Routes.paymentDetails,
-              arguments: FeeDetails(
-                  hours: 5,
-                  minutes: 50,
-                  category: "Normal",
-                  perHourRate: 2,
-                  amountDue: 11.40,
-                  paymentId: "P14545845",
-                  parkingNo: parkingNumber
-                ))
-          .then((value) {
-            widget.navBarVisibility(true);
-            setState(() {
-              scanButtonText = "Scan";
-            });
-            
-      });
+      if(_formKey.currentState.validate())
+      {
+        Navigator.pushNamed(context, Routes.paymentDetails,
+                arguments: Parking(parkingNo:parkingNumber))
+            .then((value) {
+              widget.navBarVisibility(true);
+              setState(() {
+                scanButtonText = "Scan";
+              });
+              
+        });
+      }
+      else{
+        widget.navBarVisibility(true);
+        setState(() {
+          scanButtonText = "Scan";
+        });
+      }
     }
   }
 
@@ -293,12 +291,19 @@ class FlashButton extends StatelessWidget {
 
 class ParkingNoInput extends StatelessWidget {
   ParkingNoInput(
-      {@required this.cutOutSize,
+      {
+      @required this.cutOutSize,
       @required this.borderWidth,
-      @required this.enterButtonPressed});
+      @required this.enterButtonPressed,
+      @required this.formKey
+      
+      });
   final double cutOutSize;
   final double borderWidth;
   final EnterButtonPressed enterButtonPressed;
+
+  final formKey;
+
   @override
   Widget build(BuildContext context) {
     Color onPrimary = Theme.of(context).colorScheme.onPrimary;
@@ -317,7 +322,9 @@ class ParkingNoInput extends StatelessWidget {
                 Expanded(
                   child: Center(
                     // padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: TextField(
+                    child: Form(
+                      key: formKey,
+                      child:TextFormField(
                       // minLines: 20,
                       maxLines: 1,
                       autocorrect: false,
@@ -342,7 +349,8 @@ class ParkingNoInput extends StatelessWidget {
                           suffixIcon: Icon(
                             Icons.keyboard,
                             color: onPrimary,
-                          )),
+                          ),
+                      ),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: onPrimary,
@@ -351,7 +359,14 @@ class ParkingNoInput extends StatelessWidget {
                           height: 2,
                           fontWeight: FontWeight.bold),
                       textCapitalization: TextCapitalization.characters,
-                      onSubmitted: enterButtonPressed,
+                      onFieldSubmitted: enterButtonPressed,
+                      validator: (parkingNo){
+                        if(parkingNo.length<9)
+                          return "Invalid parking no";
+                        return null;
+                      },
+                      
+                    )
                     ),
                   ),
                   flex: 2,

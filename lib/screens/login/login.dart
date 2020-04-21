@@ -262,8 +262,8 @@ class LoginScreenState extends State<LoginScreen>{
   }
 
   void _login() async{
-    Navigator.popAndPushNamed(context, Routes.home);
-    return;
+    // Navigator.popAndPushNamed(context, Routes.home);
+    // return;
 
     if(_isLoading) return;
     setState(() {

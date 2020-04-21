@@ -23,5 +23,23 @@ class FeeDetails{
   String category;
   double perHourRate;
   double amountDue;
-  FeeDetails({this.parkingNo,this.hours,this.minutes,this.category,this.perHourRate,this.amountDue,this.paymentId});
+  FeeDetails({this.parkingNo,this.hours,this.minutes,this.category,this.perHourRate,this.amountDue});
+  
+  factory FeeDetails.fromJson(Map<String, dynamic> json) {
+    return FeeDetails(
+      parkingNo: json['parkingNo'],
+      hours: json['hours'],
+      minutes: json['minutes'],
+      category:json['category'],
+      perHourRate: json['perHourRate'],
+      amountDue: json['amountDue'].toDouble(),
+    );
+  }
+
 }
+
+class Parking{
+  String parkingNo;
+  Parking({this.parkingNo});
+}
+
