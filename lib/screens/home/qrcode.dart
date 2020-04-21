@@ -211,6 +211,8 @@ class _QRcodeWindowState extends State<QRcodeWindow> with SingleTickerProviderSt
               setState(() {
                 scanButtonText = "Scan";
               });
+              _animation.stop();
+
               
         });
       }
